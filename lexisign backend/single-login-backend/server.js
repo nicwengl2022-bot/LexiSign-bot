@@ -13,10 +13,10 @@ async function start() {
   app.use(cors());
   app.use(express.json());
 
-  // Serve the Test folder as a static login page at /login
+  // Serve the frontend single-login login page at /login
   app.use(
     "/login",
-    express.static(path.join(__dirname, "../../../Test"), { extensions: ["html"] })
+    express.static(path.join(__dirname, "../../lexisign-frontend/single-login-frontend/public"), { extensions: ["html"] })
   );
 
   // Redirect root to the login page for convenience

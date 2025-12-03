@@ -115,9 +115,17 @@ module.exports._users = users; // exported for diagnostics/tests
 
 // Dev-only: return internal user state for debugging
 // Note: keep this disabled or protected in production
+// Dev-only debug endpoint. Enable by setting `ENABLE_DEBUG=true` in the environment.
+const ENABLE_DEBUG = process.env.ENABLE_DEBUG === 'true';
 router.get('/debug/user/:username', (req, res) => {
+  if (!ENABLE_DEBUG) return res.status(404).json({ message: 'Not found' });
   const username = req.params.username;
   const user = users[username];
   if (!user) return res.status(404).json({ message: 'User not found' });
-  res.json({ username, user });
+  // Return only non-sensitive fields for debugging
+  return res.json({
+    username,
+    hasSession: !!user.jti,
+    lastCheck: user.lastCheck || null,
+  });
 });

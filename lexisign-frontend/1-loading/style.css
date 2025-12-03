@@ -2,20 +2,45 @@
 body {
   margin: 0;
   padding: 0;
+  /* Use 100% of viewport height/width */
   height: 100vh;
   width: 100vw;
+  /* Set the background image and ensure it covers the whole area */
   background: url('../assets/images/background.jpg') no-repeat center center;
   background-size: cover;
+  /* Use Flexbox to position content (the loading bar) at the bottom */
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-end; /* Pushes content to the bottom */
   align-items: center;
+}
+
+/* Container for the loading bar */
+.loading-bar-container {
+  /* Ensure the container spans the full width of the screen */
+  width: 100%;
+  /* Height of the container, slightly taller than the bar itself */
+  height: 10px; 
+  /* The space the bar takes up at the bottom */
+  margin-bottom: 0; 
 }
 
 /* Black loading bar at bottom */
 .loading-bar {
+  /* Start at 0 width */
   width: 0%;
-  height: 5px;
+  /* The visible height of the bar */
+  height: 5px; 
   background-color: black;
-  transition: width 0.1s linear;
-  margin-bottom: 0;
+  /* Smooth transition for when the width changes (e.g., in JavaScript) */
+  transition: width 0.3s linear; 
+  /* Align it to the bottom of its container */
+  margin-bottom: 0; 
+}
+
+/* Style for when the loading is complete */
+.loading-bar.complete {
+    width: 100%; /* Fills the screen */
+    /* Add a subtle animation/effect when done */
+    background-color: limegreen; 
+}

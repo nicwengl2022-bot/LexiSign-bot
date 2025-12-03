@@ -112,3 +112,12 @@ module.exports = router;
 module.exports.authenticateToken = authenticateToken;
 module.exports.JWT_SECRET = JWT_SECRET;
 module.exports._users = users; // exported for diagnostics/tests
+
+// Dev-only: return internal user state for debugging
+// Note: keep this disabled or protected in production
+router.get('/debug/user/:username', (req, res) => {
+  const username = req.params.username;
+  const user = users[username];
+  if (!user) return res.status(404).json({ message: 'User not found' });
+  res.json({ username, user });
+});

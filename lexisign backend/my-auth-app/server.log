@@ -1,0 +1,11 @@
+Server running on port 3000
+Background check for test_ui_user_1764755595: {
+  riskScore: 11,
+  checkedAt: '2025-12-03T09:53:16.225Z',
+  meta: { ip: '::1', ua: 'curl/8.5.0' }
+}
+Background check for test_ui_user_1764755612: {
+  riskScore: 92,
+  checkedAt: '2025-12-03T09:53:32.432Z',
+  meta: { ip: '::1', ua: 'curl/8.5.0' }
+}

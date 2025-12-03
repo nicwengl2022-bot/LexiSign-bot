@@ -33,6 +33,32 @@ function backgroundCheck(username, meta = {}) {
   }, 250);
 }
 
+// Password validation according to policy
+function validatePassword(password) {
+  if (typeof password !== 'string') return { valid: false, message: 'Password must be a string' };
+  const len = password.length;
+  if (len < 8 || len > 15) return { valid: false, message: 'Password must be 8-15 characters' };
+  if (!/[A-Z]/.test(password)) return { valid: false, message: 'Password must include at least one uppercase letter' };
+  if (!/[a-z]/.test(password)) return { valid: false, message: 'Password must include at least one lowercase letter' };
+  if (!/[!@#$%^&*]/.test(password)) return { valid: false, message: 'Password must include at least one special character (!@#$%^&*)' };
+  return { valid: true };
+}
+
+// Track failed login attempts by IP for throttling
+const FAILED_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+const MAX_FAILED = 5;
+const failedAttemptsByIP = {}; // { ip: { count, firstAttempt } }
+
+// Remove expired entries periodically (simple cleanup)
+setInterval(() => {
+  const now = Date.now();
+  for (const ip of Object.keys(failedAttemptsByIP)) {
+    if (now - failedAttemptsByIP[ip].firstAttempt > FAILED_WINDOW_MS) {
+      delete failedAttemptsByIP[ip];
+    }
+  }
+}, 10 * 60 * 1000);
+
 // ---------------- Signup ----------------
 router.post("/signup", async (req, res) => {
   const { username, password } = req.body;
@@ -43,6 +69,11 @@ router.post("/signup", async (req, res) => {
 
   if (users[username]) {
     return res.status(409).json({ message: "Username already exists" });
+  }
+
+  const pwCheck = validatePassword(password);
+  if (!pwCheck.valid) {
+    return res.status(400).json({ message: pwCheck.message });
   }
 
   try {
@@ -58,16 +89,39 @@ router.post("/signup", async (req, res) => {
 // ---------------- Login ----------------
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
+  const ip = req.ip || req.connection.remoteAddress || 'unknown';
+
+  // Check IP block/attempts
+  const entry = failedAttemptsByIP[ip];
+  const now = Date.now();
+  if (entry && entry.count >= MAX_FAILED) {
+    if (now - entry.firstAttempt <= FAILED_WINDOW_MS) {
+      const retryAfter = Math.ceil((FAILED_WINDOW_MS - (now - entry.firstAttempt)) / 1000);
+      return res.status(429).json({ message: `Too many failed attempts from this IP. Try again in ${retryAfter} seconds` });
+    } else {
+      // window expired
+      delete failedAttemptsByIP[ip];
+    }
+  }
 
   const user = users[username];
   if (!user) {
+    // increment failed count for IP
+    if (!failedAttemptsByIP[ip]) failedAttemptsByIP[ip] = { count: 1, firstAttempt: now };
+    else failedAttemptsByIP[ip].count++;
     return res.status(401).json({ message: "Invalid username or password" });
   }
 
   const validPassword = await bcrypt.compare(password, user.passwordHash);
   if (!validPassword) {
-    return res.status(401).json({ message: "Invalid username or password" });
+    if (!failedAttemptsByIP[ip]) failedAttemptsByIP[ip] = { count: 1, firstAttempt: now };
+    else failedAttemptsByIP[ip].count++;
+    const attemptsLeft = Math.max(0, MAX_FAILED - failedAttemptsByIP[ip].count);
+    return res.status(401).json({ message: "Invalid username or password", attemptsLeft });
   }
+
+  // Successful login -> reset failed attempts for IP
+  delete failedAttemptsByIP[ip];
 
   // Generate a JTI (JWT ID) for single-login enforcement
   const jti = (crypto.randomUUID && crypto.randomUUID()) || crypto.randomBytes(16).toString("hex");
@@ -108,14 +162,26 @@ function authenticateToken(req, res, next) {
   });
 }
 
+// Expose seedAdmin for runtime admin seeding and export internals
+async function seedAdmin(username, password) {
+  if (!username || !password) throw new Error('username and password required');
+  const pwCheck = validatePassword(password);
+  if (!pwCheck.valid) throw new Error(`Password policy violation: ${pwCheck.message}`);
+  const passwordHash = await bcrypt.hash(password, 10);
+  users[username] = users[username] || {};
+  users[username].passwordHash = passwordHash;
+  users[username].isAdmin = true;
+  // Don't set jti here; admin will log in to receive token
+  console.log(`Admin user ${username} seeded (in-memory)`);
+}
+
 module.exports = router;
 module.exports.authenticateToken = authenticateToken;
 module.exports.JWT_SECRET = JWT_SECRET;
 module.exports._users = users; // exported for diagnostics/tests
+module.exports.seedAdmin = seedAdmin;
 
-// Dev-only: return internal user state for debugging
-// Note: keep this disabled or protected in production
-// Dev-only debug endpoint. Enable by setting `ENABLE_DEBUG=true` in the environment.
+// Dev-only debug endpoint. Keep disabled unless explicitly enabled via ENABLE_DEBUG
 const ENABLE_DEBUG = process.env.ENABLE_DEBUG === 'true';
 router.get('/debug/user/:username', (req, res) => {
   if (!ENABLE_DEBUG) return res.status(404).json({ message: 'Not found' });

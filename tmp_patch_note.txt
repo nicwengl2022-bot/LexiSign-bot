@@ -1,0 +1,1 @@
+Applying changes to authRoutes and server.js: add password rules, failed-attempts-by-IP blocking, seedAdmin export. Will not store plaintext passwords in repo; instruct to set env vars to create admin at runtime.

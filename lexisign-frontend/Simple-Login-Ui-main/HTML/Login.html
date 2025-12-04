@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Favicon -->
+    <link
+      rel="shortcut icon"
+      href="https://tailwindcss.com/favicon.ico"
+      type="image/x-icon"
+    />
+
+    <meta name="theme-color" content=" #FF8383" />
+    <title>Simple Login ✨</title>
+
+    <!-- Tailwind CSS -->
+    <link href="../src/output.css" rel="stylesheet" />
+
+    <!-- Hugeicons -->
+    <link rel="stylesheet" href="https://use.hugeicons.com/font/icons.css" />
+  </head>
+  <body>
+    <main class="main-Container">
+      <!-- Instruction -->
+      <div class="screen-Instruction">
+        Please Use Screen Size &#8804; 480px or Inspect Mode
+      </div>
+      <!-- Main Content -->
+      <div class="main-Content">
+        <!-- Top Container -->
+        <div class="background-Container gsap-y h-[55%]"></div>
+
+        <!-- Bottom Container -->
+        <div class="bottom-Container h-full grow mt-[-30%]">
+          <!-- Form -->
+          <div class="pageinput-Container">
+            <!-- Heading -->
+            <div class="pageBottom-TextContainer gsap-x">
+              <div class="bottom-HeadingText">Sign up</div>
+              <hr class="heading-HR" />
+            </div>
+
+            <!-- Inputs -->
+            <div class="input-Container">
+              <!-- Email -->
+              <div class="input-Field gsap-ny">
+                <label>Email</label>
+                <div class="input-Box group">
+                  <i
+                    class="hgi hgi-stroke hgi-mail-02 input-Icon group-focus-within:text-primary text-neutral-400"
+                  ></i>
+                  <hr class="input-Hr" />
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    class="outline-none grow"
+                  />
+                </div>
+              </div>
+              <!-- Password -->
+              <div class="input-Field gsap-ny">
+                <label>Password</label>
+                <div class="input-Box group">
+                  <i
+                    class="hgi hgi-stroke hgi-circle-lock-01 input-Icon group-focus-within:text-primary text-neutral-400"
+                  ></i>
+                  <hr class="input-Hr" />
+                  <input
+                    type="password"
+                    placeholder="Enter your password"
+                    class="outline-none grow"
+                  />
+                  <i
+                    class="hgi hgi-stroke hgi-view-off input-Icon text-neutral-400"
+                  ></i>
+                </div>
+              </div>
+              <!-- Remember & Forgot -->
+              <div class="remember-Forgot gsap-ny">
+                <div class="remember">
+                  <input type="checkbox" id="checkbox" class="accent-primary" />
+                  <label for="checkbox">Remember Me</label>
+                </div>
+                <span class="text-sm font-semibold h-fit w-fit text-primary">
+                  Forgot Password?
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div class="redirect-ButtonContainer gsap-ny">
+            <button>Login</button>
+            <a href="./Signup.html">
+              <span>Don’t have an Account ?</span>
+              <span class="text-primary font-medium">Sign Up</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- GSAP Link -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+      integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <!-- Javascript File -->
+    <script src="../index.js"></script>
+  </body>
+</html>

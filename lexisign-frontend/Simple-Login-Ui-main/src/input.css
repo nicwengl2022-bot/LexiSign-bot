@@ -1,0 +1,152 @@
+@import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
+
+@import "tailwindcss";
+
+@theme {
+  --font-rubik: Rubik, "sans-serif";
+
+  --color-primary: #ff8383;
+
+  --breakpoint-xs: 30rem;
+}
+
+* {
+  transition: 0.5s;
+}
+
+.gsap-y {
+  transform: translateY(-100%);
+  opacity: 0;
+  overflow: hidden;
+}
+
+.gsap-x {
+  transform: translateX(-100%);
+  opacity: 0;
+  overflow: hidden;
+}
+
+.gsap-ny {
+  transform: translateY(100%);
+  opacity: 0;
+  overflow: hidden;
+}
+
+.gsap-nx {
+  transform: translateX(100%);
+  opacity: 0;
+  overflow: hidden;
+}
+
+.gsap-op {
+  opacity: 0;
+  overflow: hidden;
+}
+
+::selection {
+  @apply bg-primary text-black;
+}
+
+.main-Container {
+  @apply bg-white h-screen w-screen font-rubik;
+}
+
+.screen-Instruction {
+  @apply h-full w-full hidden xs:flex justify-center items-center font-semibold text-xl text-center bg-white text-black;
+}
+
+.main-Content {
+  @apply h-full w-full flex flex-col xs:hidden bg-white;
+}
+
+.background-Container {
+  width: 100%;
+  background: url("../Assets/Background/bgImage.svg") bottom no-repeat;
+  background-size: cover;
+}
+
+.bottom-Container {
+  @apply w-full px-6 py-10 flex flex-col justify-between;
+}
+
+.bottom-TextContainer {
+  @apply h-fit w-full flex flex-col gap-4;
+}
+
+.bottom-HeadingText {
+  @apply h-fit w-full font-semibold text-4xl text-neutral-700;
+}
+
+.bottom-ContentText {
+  @apply h-fit w-[80%] text-sm text-neutral-400;
+}
+
+.arrow-ButtonContainer {
+  @apply h-fit w-full flex justify-end items-center;
+
+  a {
+    @apply h-fit w-fit flex justify-center items-center gap-4;
+
+    span {
+      @apply text-sm font-medium text-neutral-400;
+    }
+  }
+}
+
+.pageBottom-TextContainer {
+  @apply h-fit w-full font-medium text-4xl text-neutral-700 flex flex-col gap-2;
+}
+
+.heading-HR {
+  @apply h-[3px] w-[25%] border-none bg-primary rounded-full;
+}
+
+.redirect-ButtonContainer {
+  @apply h-fit w-full flex flex-col justify-center items-center gap-5;
+
+  button {
+    @apply h-fit w-full text-white bg-primary rounded-xl font-semibold text-lg py-3 active:scale-[97%];
+  }
+  a {
+    @apply h-fit w-fit flex justify-center items-center gap-1 text-sm  text-neutral-400;
+  }
+}
+
+.pageinput-Container {
+  @apply h-fit w-full flex flex-col gap-10;
+}
+
+.input-Container {
+  @apply h-fit w-full flex flex-col justify-center items-center gap-6;
+}
+
+.input-Field {
+  @apply h-fit w-full flex flex-col gap-3;
+
+  label {
+    @apply font-medium text-base text-neutral-600;
+  }
+
+  .input-Box {
+    @apply h-fit w-full flex items-center gap-2 pb-2 border-b border-b-neutral-400 focus-within:border-b-primary text-sm;
+
+    i {
+      @apply text-base;
+    }
+
+    .input-Hr {
+      @apply h-[1px] border-none bg-neutral-400 w-3 rotate-90;
+    }
+
+    .input-Display {
+      @apply outline-none grow;
+    }
+  }
+}
+.remember-Forgot {
+  @apply h-fit w-full flex justify-between items-center;
+}
+
+.remember {
+  @apply h-fit w-fit flex justify-center items-center gap-1 font-medium text-sm text-neutral-700;
+}
